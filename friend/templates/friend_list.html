@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="block left-menu">
+                {% if request_list %}
+                    <a href="{% url 'friend:requests' request.user.profile.nick %}">Новые Заявки ({{ request_list|length }})</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-6 content">
+                <div class="card">
+                    <div class="card-body">
+                        {% if this_user.pk == user.profile.pk %}  <!-- Your friends -->
+                            <h3 color="brown" align="center">Твои Единомышленники ({{ amigos|length }})</h3>
+                        {% else %}                                <!-- Your friends' friends -->
+                            <h3 color="brown" align="center">Друзья {{ this_user.nick }} ({{ amigos|length }}) </h3>
+                        {% endif %}
+                        <hr>
+
+                        <!-- tienes? -->
+                        {% if response %}
+                        <p>{{response}}</p>
+                        {% endif %}
+
+                        {% if not amigos %}   <!-- You have / Your friend has no friends -->
+                            {{ error }}
+
+                        {% else %}
+                        <div class="d-flex flex-row flex-wrap">
+                            {% for friend in amigos %}   <!-- Tuples?? -->
+                            <div class="card flex-row flex-row-1 p-2 mx-2 my-2 align-items-center">
+                                <a class="profile-link" href="{{ friend.0.profile.get_absolute_url }}">
+                                    <div class="card-image m-2">
+                                        <img class="img-fluid profile-image" src="{{ friend.0.avatar.url }}" alt="">
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="card-center px-2">
+                                <a class="profile-link" href="{{ friend.0.profile.get_absolute_url }}">
+                                    <h4 class="card-title">{{ friend.0.username|truncatechars:50 }}</h4>
+                                </a>
+                                {% if friend.0 %}   <!-- создание чата-->
+                                <a href="#" color="gold">Отправить СМС</a>
+                                {% endif %}
+                            </div>
+
+                            <!-- Является друзьями или нет?-->
+                            <div class="d-flex flex-row card-light flex-grow-1 justify-content-end mx-2">
+                                {% if friend.1 %}
+                                    <div class="d-flex flex-row friends-text-container p-3">
+<!--                                        <p class="friends-text m-auto">Твой Друг:) </p>-->
+                                        <a href="{% url 'friend:remove_friend' friend.0 %}" color="red">Убрать из Друзей!</a>
+                                    </div>
+                                {% else %}   <!-- Если смотрим список чужой -->
+                                    <div class="d-flex flex-row friends-text-container p-3">
+<!--                                        <p class="friends-text m-auto">Твой Друг:) </p>-->
+                                        <a href="{% url 'friend:send_request' friend.0 %}" color="green">Фолловить</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div></div>
+<!--                                <span>{% if user.profile.avatar.name %}-->
+<!--                                    <img src="{{ friend.avatar.url }}" class="mainpage-avatar-img-lg img-thumbnail" >-->
+<!--                                {% else %}-->
+<!--                                    <img src="{% static 'img/defaultava.png' %}" class="mainpage-avatar-img img-thumbnail" >-->
+<!--                                    {% endif %}</span>-->
+<!--                            <table width="100%" cellspacing="0" cellpadding="5">-->
+<!--                                   <tr>-->
+<!--                                       <td align="center"><a href="{{ friend.get_absolute_url }}">{{ friend.0.profile }}</a></td>-->
+<!--                                       <td align="center"><a href="{% url 'friend:remove_friend' friend.0 %}" color="green">Убрать из Друзей!</a></td>-->
+<!--                                   </tr>-->
+<!--                            </table>-->
+
+<!--                                <li><a href="{{ friend.get_absolute_url }}">{{ friend }}</a></li>-->
+                            <!-- Аватар + Ник + Написать Сообщение + Разорвать Связь (кнопка)-->
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+        </div>
+
+        <!-- extends? -->
+        <div class="col-3">
+            <div class="block" style="text-align: center;">
+                <h3 color="purple"><em>@{{ this_user }} </em></h3>
+                {% if this_user.avatar.name %}
+                    <img src="{{ this_user.avatar.url }}" class="mainpage-avatar-img-lg img-thumbnail" >
+                {% else %}
+                    <img src="{% static 'img/defaultava.png' %}" class="mainpage-avatar-img img-thumbnail" >
+                {% endif %}
+
+                <div class="right-menu-links">
+                    {% if this_user != request.user.profile %}
+                    <a href="{% url 'profile' this_user %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fa fa-user-circle"></i> Профиль {{this_user}}
+                    </a>
+                    {% endif %}
+
+                    {% if this_user == request.user.profile  %}   <!-- Если это наш профиль -->
+                    <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-info">Редактировать профиль</a>
+                    <br>
+
+                    <a href="{% url 'logout' %}">
+                        <i class="fa fa-users"></i> Выйти
+                    </a>
+
+                    {% else %}  <!-- Если страница НЕ твоя -->
+                        {% if amigoss  %} <!-- if user in sel_user_friends -->
+                            <h4 color="green"><em>Вы уже Друзья!</em></h4>
+                        {% elif request1 %}  <!-- встречный запрос отправлен -->
+                            <a href="{% url 'friend:accept_request' request1.pk %}" class="btn btn-sm btn-success">Accept Friend Request</a>
+                        {% elif request2 %}   <!-- Ты отправил Запрос! -->
+                        <h4 color="brown"><em>Request has been already sent!</em></h4>
+                        {% else %}  <!-- Отправить Запрос! -->
+                            <a href="{% url 'friend:send_request' this_user %}" class="btn btn-sm btn-warning">Send Friend Request</a>
+                        {% endif %}
+
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container content">
+        <div class="row" style="margin-left: 20px;">
+            <div class="col-5">
+                {% if selected_user.avatar.name %}
+                    <img src="{{ selected_user.avatar.url }}" class="avatar-img-lg img-thumbnail" width="400px" height="400px">
+                {% else %}
+                    <img src="{% static 'img/defaultava.png' %}" class="avatar-img img-thumbnail" >
+                {% endif %}
+                <br>
+
+                <h2>{{ selected_user.nick }} </h2>
+
+                {% if selected_user == request.user.profile  %}
+                    <a href="{% url 'edit_profile' %}" class="btn btn-sm btn-info">Редактировать профиль</a>
+                    <br><br>
+                    <a href="{% url 'logout' %}">
+                        <i class="fa fa-users"></i> Выйти
+                    </a>
+
+                {% else %}
+                    {% if selected_user.user in amigos  %}
+                        <h4 color="green"><em>Вы уже Друзья!</em></h4>
+                    {% elif request1 %}
+                        <a href="{% url 'friend:accept_request' request1.pk %}" class="btn btn-sm btn-success">Accept Friend Request</a>
+                    {% elif request2 %}
+                    <h4 color="brown"><em>Request has been already sent!</em></h4>
+                    {% else %}
+                        <a href="{% url 'friend:send_request' selected_user.nick %}" class="btn btn-sm btn-warning">Send Friend Request</a>
+                    {% endif %}
+
+                    <a href="{% url 'friend:friends' selected_user.nick %}" class="btn btn-sm btn-primary" color="brown">
+                        Друзья {{selected_user.nick}} ({{sel_user_friends|length}})</a>
+
+
+                {% endif %}
+
+            </div>
+
+            <div class="col-7">
+                <dl class="row">
+                    <dt class="col-sm-3 text-right" id="hua">Полное имя</dt>
+                    <dd class="col-sm-9">{{ selected_user.fio }} </dd>   <!-- было еще profile-->
+
+                    <dt class="col-sm-3 text-right">Пол</dt>
+                    <dd class="col-sm-9">{{ selected_user.get_gender_display }}</dd>
+
+                    <dt class="col-sm-3 text-right">Дата рождения</dt>
+                    <dd class="col-sm-9">{{ selected_user.birthday | date:"d M Y" }}</dd>
+
+                    <br>
+                    <dt class="col-sm-3 text-right">Город</dt>
+                    <dd class="col-sm-9">{{ selected_user.city }}</dd>
+                    <hr>
+                    <dt class="col-sm-3 text-right">Недавно посещал</dt>
+                    <dd class="col-sm-9">{{ selected_user.visited }}</dd>
+
+                    <dt class="col-sm-3 text-right">Планирую посетить</dt>
+                    <dd class="col-sm-9">{{ selected_user.planning }}</dd>
+
+                    <dt class="col-sm-3 text-right">Владение языками</dt>
+                    <dd class="col-sm-9">{{ selected_user.language }}</dd>
+
+                    <dt class="col-sm-3 text-right">Мой Путь</dt>
+                    <dd class="col-sm-9"><em style="font-family: 'Times New Roman', serif;">{{ selected_user.bio }}</em></dd>
+                    <hr>
+                    <br>
+                    <dt class="col-sm-3 text-right">Статус отношений</dt>
+                    <dd class="col-sm-9">{{ selected_user.get_relationship_display }}</dd>
+
+                    <dt class="col-sm-3 text-right">На Созвоне</dt>
+                    <dd class="col-sm-9">{{ selected_user.mobile }}</dd>
+
+                    <dt class="col-sm-3 text-right">Email</dt>
+                    <dd class="col-sm-9">{{ selected_user.user.email }}</dd>
+
+                </dl>
+            </div>
+        </div>
+    </div>
+{% endblock %}

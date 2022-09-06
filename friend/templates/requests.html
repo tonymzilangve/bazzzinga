@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="block left-menu"></div>
+        </div>
+
+        <div class="col-6 content">
+            {% if response %}
+            <h4> {{ response }}</h4>
+            <br>
+            {% endif %}
+
+            <div class="card-body">
+                        Заявки в друзья ({{ requests|length }}):<br><hr>
+            </div>
+
+            <!-- Входящие -->
+            {% if requests %}
+            <div class="d-flex flex-row flex-wrap">
+
+            {% for r in requests %}
+            <div class="card flex-row flex-grow-1 p-2 mx-2 my-2 align-items-center">
+                <a class="profile_link" href="{% url 'profile' r.sender.profile.nick %}">
+                    <div class="card-image m-2">
+                        <img class="img-fluid profile-image" src="{{ r.sender.profile.avatar.url}}" alt="">
+                    </div>
+                </a>
+                <a class="profile_link" href="{% url 'profile' r.sender.profile.nick %}">  <!-- request.sender.id-->
+                    <div class="card-center px-2">
+                        <h4 class="card-title">{{request.sender.username}}</h4>
+                    </div>
+                </a>
+                <div class="d-flex flex-row card-right flex-grow-1 justify-content-end mx-2">
+                    <a href="{% url 'friend:decline_request' r.sender.profile.nick %}">  <!-- r.id -->
+                    <span id="id_cancel_{{request.sender.id}}" class="decline-friend-request material-icons p-1">decline</span>
+                    </a>
+
+                    <a href="{% url 'friend:accept_request' r.id %}">
+                    <span id="id_confirm_{{request.sender.id}}" class="confirm-friend-request material-icons p-1">accept</span>
+                    </a>
+                    <!-- тут вместо S надо интегрировать функцию по Нажатию-->
+                </div>
+            </div>
+            <!-- endfor -->
+
+                <!-- этот шаблон где по 2 плашки заявок в строку. Если нечетное колво => последняя целиковая-->
+            {% if forloop.counter|divisibleby:2 %}
+            </div><div class="d-flex flex-row flex-wrap">
+            {% endif %}
+            {% endfor %}
+
+            </div>
+            {% else %}
+            <div class="d-flex flex-row flex-grow-1 justify-content-center align-items-center p-4">
+                <p>Новых заявок нет(((</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

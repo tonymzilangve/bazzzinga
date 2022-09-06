@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="block left-menu"></div>
+        </div>
+
+        <div class="col-6 content">
+                <div class="card">
+                    <div class="card-body">
+                        Результаты поиска ({{profiles|length}}):<br><hr>
+                        <ul>
+                        {% if profiles %}
+                            {% for pro in profiles %}
+                            <p>
+                                <li><span><a href="{{ pro.0.get_absolute_url }}">{{ pro.0 }}</a></span>
+                                {% for r in requests %}
+                                {% if pro.0.user == r.receiver %}
+                                    <a href="{% url 'friend:decline_request' pro.0.nick %}" class="btn btn-outline-success btn-sm">
+                                    <i class="fa fa-pencil-square"></i>Отменить заявку</a>
+                                {% endif %}
+                                {% endfor %}
+
+                                {% if pro.0 in amigos %}
+                                    <p>Вы Уже Друзья!</p>
+                                {% else %}
+                                    {% if pro.0.user in amigos  %}
+                                        <h5 color="green"><em>Вы уже Друзья!</em></h5>
+                                    {% elif request1 %}
+                                        <a href="{% url 'friend:accept_request' request1.pk %}" class="btn btn-sm btn-success">Accept Friend Request</a>
+                                    {% elif request2 %}
+                                        <a href="{% url 'friend:decline_request' pro.0.nick %}" class="btn btn-outline-success btn-sm">
+                                        <i class="fa fa-pencil-square"></i>Отменить заявку</a>
+                                    {% else %}  <!-- Отправить Запрос! -->
+                                        <a href="{% url 'friend:send_request' pro.0 %}" class="btn btn-sm btn-warning">Send Friend Request</a>
+                                    {% endif %}
+                                {% endif %}
+
+
+                                </li>
+                            </p>
+                            {% endfor %}
+                        {% else %}
+                            <p color="red">По вашему запросу ничего не найдено!</p>
+                        {% endif %}
+                        </ul>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

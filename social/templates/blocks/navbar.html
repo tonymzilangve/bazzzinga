@@ -1,0 +1,24 @@
+{% load static %}
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-light justify-content-between" style="background-color: #7f00ff;">
+    <a class="navbar-brand" href="/"><img src="{% static 'img/logo2.jpg' %}" alt="logo" width="260px" height="80px" ></a>
+
+    <div class="menu">
+        {% if user.is_authenticated %}
+            <a href="{% url 'home' %}">
+                <i class="fa fa-newspaper-o"></i> Лента
+            </a>
+            <a href="{% url 'friend:friends' user.profile %}">
+                <i class="fa fa-users"></i> Мои друзья ({{ amigos|length }})
+                {% if requests %}} /[+{{ requests|length }} new] {% endif %}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="form-inline">
+        <form method ="GET" action="{% url 'search' %}">
+            <input type="search" name="q" class="form-control-sm" placeholder="Search" aria-label="search" aria-describedby="search-addon"   />
+            <button type="submit" class="btn btn-outline-success and-all-other-classes">Поиск</button>
+        </form>
+    </div>
+</nav>

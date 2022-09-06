@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container content" style="text-align: center;">
+        <div>
+            <h2 color="aquamarine">ОТКРОЙ МИР ПУТЕШЕСТВИЙ! </h2>
+            <hr>
+
+            <form class="bootstrap-form" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                {% if form.error %}
+                    {{ error }}
+                {% endif %}
+                <br>
+
+                <input type="submit" class="btn btn-primary" value="Войти">
+                <a  class="btn btn-outline-primary" href="{% url 'register' %}"  value="Регистрация"></a>
+
+                <br>
+                <label class="btn btn-success active">
+                    <input type="checkbox" checked autocomplete="off"> Оставаться в системе
+                    <br>
+                </label>
+
+                <br>
+                <img src="{% static 'img/keepcalm3.jpg' %}" alt="keep"  width="200px" height="270px"  >
+
+            </form>
+        </div>
+    </div>
+{% endblock %}
