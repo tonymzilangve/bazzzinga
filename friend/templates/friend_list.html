@@ -2,6 +2,8 @@
 
 {% load static %}
 
+{% block title %}Friends{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -66,20 +68,7 @@
                                 {% endif %}
                             </div>
                             <div></div>
-<!--                                <span>{% if user.profile.avatar.name %}-->
-<!--                                    <img src="{{ friend.avatar.url }}" class="mainpage-avatar-img-lg img-thumbnail" >-->
-<!--                                {% else %}-->
-<!--                                    <img src="{% static 'img/defaultava.png' %}" class="mainpage-avatar-img img-thumbnail" >-->
-<!--                                    {% endif %}</span>-->
-<!--                            <table width="100%" cellspacing="0" cellpadding="5">-->
-<!--                                   <tr>-->
-<!--                                       <td align="center"><a href="{{ friend.get_absolute_url }}">{{ friend.0.profile }}</a></td>-->
-<!--                                       <td align="center"><a href="{% url 'friend:remove_friend' friend.0 %}" color="green">Убрать из Друзей!</a></td>-->
-<!--                                   </tr>-->
-<!--                            </table>-->
 
-<!--                                <li><a href="{{ friend.get_absolute_url }}">{{ friend }}</a></li>-->
-                            <!-- Аватар + Ник + Написать Сообщение + Разорвать Связь (кнопка)-->
                             {% endfor %}
                         </div>
                         {% endif %}

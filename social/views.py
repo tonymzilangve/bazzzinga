@@ -15,41 +15,41 @@ from .forms import ProfileForm, PostForm, RegisterForm, LoginForm
 
 
 class RegisterView(TemplateView):
+    """ РЕГИСТРАЦИЯ НОВОГО ПОЛЬЗОВАТЕЛЯ """
     template_name = "registration/register.html"
 
     def dispatch(self, request, *args, **kwargs):
         form = RegisterForm()
+
         if request.method == 'POST':
             form = RegisterForm(request.POST)
-            a = request.POST.get('username')
-            c = request.POST.get('password')
 
-            if form.is_valid():
-                self.create_new_user(form)
-                user = authenticate(request, username=a, password=c)
+            if form.is_valid() and form.no_dublicate():
+                username = request.POST.get('username', None)
+                email = request.POST.get('email', None)
+                password = request.POST.get('password', None)
+
+                User.objects.create_user(username, email, password)
+                user = authenticate(request, username=username, email=email, password=password)
                 login(request, user)
 
                 form1 = ProfileForm(instance=self.get_profile(request.user))
-                form1.nick = a
-                order = form1.save(commit=False)
-                order.user = request.user
+                prof = form1.save(commit=False)
+                prof.user = request.user
+                prof.nick = username
+                prof.email = email
+                prof.save()
 
-                order.save()
-                messages.success(request, "Добро пожаловать в семью!")
-                return redirect(reverse("home"))
+                amigos = Amigos.objects.create(user=request.user)
+                messages.success(request, "Добро пожаловать в семью!\nДополните информацию в Ваш профиль!")
+
+                return redirect(reverse("edit_profile"))
 
         context = {
             'form': form
         }
-        return render(request, self.template_name, context)
 
-    def create_new_user(self, form):
-        email = None
-        if 'email' in form.cleaned_data:
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            User.objects.create_user(username, email, password)
+        return render(request, self.template_name, context)
 
     def get_profile(self, user):
         try:

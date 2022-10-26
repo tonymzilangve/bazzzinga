@@ -1,13 +1,45 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}Register{% endblock %}
+
 {% block content %}
     <div class="container content" style="text-align: center;">
         <div style="width: 300px; display: inline-block;">
-            <h2>Регистрация</h2><hr><br>
-            <form method="post" class="bp3-form-group">
+            <h2>Регистрация</h2>
+            <br>
+
+            <form method="post" >
                 {% csrf_token %}
-                {{ form.as_p }}
-                <input type="submit" class="btn btn-success" value="Регистрация">
+
+                {% for field in form %}
+                <div class="form-outline mb-4">
+                    <input type="{{field.name}}" id="{{field.name}}" class="form-control" />
+                    <label class="form-label" for="{{field.name}}">{{field.label}}</label>
+                </div>
+                {% endfor %}
+
+                <input type="submit" class="btn btn-success" value="Присоединиться к нам!">
+                <br>
+
+                <div class="text-center">
+                    <p><em>or sign up with:</em></p>
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                      <i class="fab fa-google"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                      <i class="fab fa-vk"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                      <i class="fab fa-github"></i>
+                    </button>
+                </div>
             </form>
         </div>
     </div>

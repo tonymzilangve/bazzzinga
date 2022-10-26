@@ -11,7 +11,7 @@ class Amigos(models.Model):    # Friend_List
     # settings.AUTH_USER_MODEL
 
     def __str__(self):
-        return self.user.profile.nick
+        return self.user.profile.nick + "'s friends"
 
     def add_friend(self, account):
         if not account in self.friends.all():

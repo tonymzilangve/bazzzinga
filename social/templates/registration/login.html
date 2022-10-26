@@ -1,33 +1,73 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-    <div class="container content" style="text-align: center;">
-        <div>
-            <h2 color="aquamarine">ОТКРОЙ МИР ПУТЕШЕСТВИЙ! </h2>
-            <hr>
+{% block title %}Login{% endblock %}
 
-            <form class="bootstrap-form" method="post">
+{% block content %}
+<div class="container" style="width:500px;">
+        <div class="col">
+            <h2 color="aquamarine">ОТКРОЙ МИР ПУТЕШЕСТВИЙ! </h2>
+        </div>
+</div>
+
+<div class="container content">
+    <div class="row justify-content-center">
+        <div class="col-sm text-center ">
+             <img src="{% static 'img/keepcalm3.jpg' %}" alt="keep"  width="300px" height="400px"  >
+        </div>
+
+        <div class="col-sm" style="width: 300px;">
+            <form class="bootstrap-form text-center" method="post">
+                <br>
                 {% csrf_token %}
-                {{ form.as_p }}
                 {% if form.error %}
                     {{ error }}
                 {% endif %}
                 <br>
 
-                <input type="submit" class="btn btn-primary" value="Войти">
-                <a  class="btn btn-outline-primary" href="{% url 'register' %}"  value="Регистрация"></a>
+                {% for field in form %}
+                <div class="form-outline mb-4">
+                    <input type="{{ field.name }}" id="{{ field.name }}" class="form-control" />
+                    <label class="form-label" for="{{ field.name }}">{{ field.label }}</label>
+                </div>
+                {% endfor %}
+
+                <input type="submit" class="btn btn-primary" value="Войти" >
+                <a class="btn btn-outline-primary" href="{% url 'register' %}">Регистрация</a>
 
                 <br>
-                <label class="btn btn-success active">
-                    <input type="checkbox" checked autocomplete="off"> Оставаться в системе
-                    <br>
-                </label>
+                <div class="form-check d-flex justify-content-center mb-4">
+                    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
+                    <label class="form-check-label" for="form2Example33">
+                        Запомнить меня
+                    </label>
+                </div>
 
-                <br>
-                <img src="{% static 'img/keepcalm3.jpg' %}" alt="keep"  width="200px" height="270px"  >
+                <div class="text-center">
+                    <p><em>or sign in with:</em></p>
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
 
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                      <i class="fab fa-google"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                      <i class="fab fa-vk"></i>
+                    </button>
+
+                    <button type="button" class="btn btn-primary btn-floating mx-1">
+                      <i class="fab fa-github"></i>
+                    </button>
+                </div>
             </form>
         </div>
+
+        <div class="col-sm text-center ">
+            <img src="{% static 'img/keepcalm3.jpg' %}" alt="keep"  width="300px" height="400px"  >
+        </div>
     </div>
+</div>
 {% endblock %}
+
